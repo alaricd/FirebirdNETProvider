@@ -40,7 +40,13 @@ public class FbDateTimeTypeMapping : DateTimeTypeMapping
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		((FbParameter)parameter).FbDbType = _fbDbType;
+		parameter.DbType = _fbDbType switch
+		{
+			FbDbType.TimeStamp => System.Data.DbType.DateTime,
+			FbDbType.Date => System.Data.DbType.Date,
+			FbDbType.Time => System.Data.DbType.Time,
+			_ => throw new ArgumentOutOfRangeException(nameof(_fbDbType), $"{nameof(_fbDbType)}={_fbDbType}"),
+		};
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)

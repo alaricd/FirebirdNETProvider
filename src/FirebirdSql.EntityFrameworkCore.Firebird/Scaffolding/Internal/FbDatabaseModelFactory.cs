@@ -32,12 +32,20 @@ namespace FirebirdSql.EntityFrameworkCore.Firebird.Scaffolding.Internal;
 
 public class FbDatabaseModelFactory : DatabaseModelFactory
 {
+	readonly DbProviderFactory _providerFactory;
+
+	public FbDatabaseModelFactory(DbProviderFactory providerFactory)
+	{
+		_providerFactory = providerFactory;
+	}
+
 	public int MajorVersionNumber { get; private set; }
 
 	public override DatabaseModel Create(string connectionString, DatabaseModelFactoryOptions options)
 	{
-		using (var connection = new FbConnection(connectionString))
+		using (var connection = _providerFactory.CreateConnection())
 		{
+			connection.ConnectionString = connectionString;
 			return Create(connection, options);
 		};
 	}
@@ -87,6 +95,14 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 
 	private static Func<DatabaseTable, bool> GenerateTableFilter(IReadOnlyList<string> tables) =>
 		tables.Any() ? x => tables.Contains(x.Name) : _ => true;
+
+	private static DbParameter CreateParameter(DbCommand command, string name, object value)
+	{
+		var parameter = command.CreateParameter();
+		parameter.ParameterName = name;
+		parameter.Value = value;
+		return parameter;
+	}
 
 	private const string GetTablesQuery = """
 		SELECT
@@ -222,7 +238,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			using (var command = connection.CreateCommand())
 			{
 				command.CommandText = GetColumnsQuery();
-				command.Parameters.Add(new FbParameter("@RelationName", table.Name));
+				command.Parameters.Add(CreateParameter(command, "@RelationName", table.Name));
 
 				using (var reader = command.ExecuteReader())
 				{
@@ -318,7 +334,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			using (var command = connection.CreateCommand())
 			{
 				command.CommandText = GetPrimaryKeysQuery;
-				command.Parameters.Add(new FbParameter("@RelationName", table.Name));
+				command.Parameters.Add(CreateParameter(command, "@RelationName", table.Name));
 
 				using (var reader = command.ExecuteReader())
 				{
@@ -365,7 +381,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			using (var command = connection.CreateCommand())
 			{
 				command.CommandText = GetIndexesQuery;
-				command.Parameters.Add(new FbParameter("@RelationName", table.Name));
+				command.Parameters.Add(CreateParameter(command, "@RelationName", table.Name));
 
 				using (var reader = command.ExecuteReader())
 				{
@@ -433,7 +449,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			using (var command = connection.CreateCommand())
 			{
 				command.CommandText = GetConstraintsQuery;
-				command.Parameters.Add(new FbParameter("@RelationName", table.Name));
+				command.Parameters.Add(CreateParameter(command, "@RelationName", table.Name));
 
 				using (var reader = command.ExecuteReader())
 				{

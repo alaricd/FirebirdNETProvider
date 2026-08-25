@@ -323,6 +323,6 @@ public class ScaffoldingTests : EntityFrameworkCoreTestsBase
 
 	static IDatabaseModelFactory GetModelFactory()
 	{
-		return new FbDatabaseModelFactory();
+		return new FbDatabaseModelFactory(FirebirdClientFactory.Instance);
 	}
 }

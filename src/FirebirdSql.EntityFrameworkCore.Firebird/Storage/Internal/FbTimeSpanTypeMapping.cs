@@ -40,7 +40,11 @@ public class FbTimeSpanTypeMapping : TimeSpanTypeMapping
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		((FbParameter)parameter).FbDbType = _fbDbType;
+		parameter.DbType = _fbDbType switch
+		{
+			FbDbType.Time => System.Data.DbType.Time,
+			_ => throw new ArgumentOutOfRangeException(nameof(_fbDbType), $"{nameof(_fbDbType)}={_fbDbType}"),
+		};
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)

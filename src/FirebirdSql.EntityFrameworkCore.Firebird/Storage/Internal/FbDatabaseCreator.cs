@@ -82,12 +82,18 @@ public class FbDatabaseCreator : RelationalDatabaseCreator
 
 	public override void Delete()
 	{
-		FbConnection.ClearPool((FbConnection)_connection.DbConnection);
+		if (_connection.DbConnection is FbConnection connection)
+		{
+			FbConnection.ClearPool(connection);
+		}
 		FbConnection.DropDatabase(_connection.ConnectionString);
 	}
 	public override Task DeleteAsync(CancellationToken cancellationToken = default)
 	{
-		FbConnection.ClearPool((FbConnection)_connection.DbConnection);
+		if (_connection.DbConnection is FbConnection connection)
+		{
+			FbConnection.ClearPool(connection);
+		}
 		return FbConnection.DropDatabaseAsync(_connection.ConnectionString, cancellationToken);
 	}
 

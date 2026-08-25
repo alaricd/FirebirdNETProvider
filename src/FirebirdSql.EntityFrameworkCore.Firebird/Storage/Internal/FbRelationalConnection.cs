@@ -16,17 +16,24 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System.Data.Common;
-using FirebirdSql.Data.FirebirdClient;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
 
 public class FbRelationalConnection : RelationalConnection, IFbRelationalConnection
 {
-	public FbRelationalConnection(RelationalConnectionDependencies dependencies)
+	readonly DbProviderFactory _providerFactory;
+
+	public FbRelationalConnection(RelationalConnectionDependencies dependencies, DbProviderFactory providerFactory)
 		: base(dependencies)
-	{ }
+	{
+		_providerFactory = providerFactory;
+	}
 
 	protected override DbConnection CreateDbConnection()
-		=> new FbConnection(ConnectionString);
+	{
+		var connection = _providerFactory.CreateConnection();
+		connection.ConnectionString = ConnectionString;
+		return connection;
+	}
 }

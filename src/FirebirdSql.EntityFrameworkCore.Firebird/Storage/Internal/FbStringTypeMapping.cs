@@ -16,7 +16,6 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System.Data;
-using System.Data.Common;
 using FirebirdSql.Data.FirebirdClient;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -36,11 +35,6 @@ public class FbStringTypeMapping : StringTypeMapping
 		: base(parameters)
 	{
 		_fbDbType = fbDbType;
-	}
-
-	protected override void ConfigureParameter(DbParameter parameter)
-	{
-		((FbParameter)parameter).FbDbType = _fbDbType;
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)
