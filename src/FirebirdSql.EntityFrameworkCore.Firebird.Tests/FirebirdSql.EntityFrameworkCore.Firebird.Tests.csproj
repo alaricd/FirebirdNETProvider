@@ -21,6 +21,9 @@
 		<PackageReference Include="NUnit" Version="4.2.2" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
 		<PackageReference Include="NUnitLite" Version="4.2.2" />
+		<PackageReference Include="pengdows.crud.fakeDb" Version="2.0.5">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\FirebirdSql.EntityFrameworkCore.Firebird\FirebirdSql.EntityFrameworkCore.Firebird.csproj" />
