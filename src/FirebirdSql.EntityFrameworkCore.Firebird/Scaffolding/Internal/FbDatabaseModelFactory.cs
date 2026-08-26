@@ -83,6 +83,14 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 		}
 	}
 
+	private static DbParameter CreateParameter(DbCommand command, string name, object value)
+	{
+		var parameter = command.CreateParameter();
+		parameter.ParameterName = name;
+		parameter.Value = value;
+		return parameter;
+	}
+
 	private static string GetDefaultSchema() => null;
 
 	private static Func<DatabaseTable, bool> GenerateTableFilter(IReadOnlyList<string> tables) =>
@@ -222,7 +230,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			using (var command = connection.CreateCommand())
 			{
 				command.CommandText = GetColumnsQuery();
-				command.Parameters.Add(new FbParameter("@RelationName", table.Name));
+				command.Parameters.Add(CreateParameter(command, "@RelationName", table.Name));
 
 				using (var reader = command.ExecuteReader())
 				{
@@ -318,7 +326,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			using (var command = connection.CreateCommand())
 			{
 				command.CommandText = GetPrimaryKeysQuery;
-				command.Parameters.Add(new FbParameter("@RelationName", table.Name));
+				command.Parameters.Add(CreateParameter(command, "@RelationName", table.Name));
 
 				using (var reader = command.ExecuteReader())
 				{
@@ -365,7 +373,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			using (var command = connection.CreateCommand())
 			{
 				command.CommandText = GetIndexesQuery;
-				command.Parameters.Add(new FbParameter("@RelationName", table.Name));
+				command.Parameters.Add(CreateParameter(command, "@RelationName", table.Name));
 
 				using (var reader = command.ExecuteReader())
 				{
@@ -433,7 +441,7 @@ public class FbDatabaseModelFactory : DatabaseModelFactory
 			using (var command = connection.CreateCommand())
 			{
 				command.CommandText = GetConstraintsQuery;
-				command.Parameters.Add(new FbParameter("@RelationName", table.Name));
+				command.Parameters.Add(CreateParameter(command, "@RelationName", table.Name));
 
 				using (var reader = command.ExecuteReader())
 				{

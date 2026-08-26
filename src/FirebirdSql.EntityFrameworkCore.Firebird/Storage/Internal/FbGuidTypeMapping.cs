@@ -33,7 +33,9 @@ public class FbGuidTypeMapping : GuidTypeMapping
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		((FbParameter)parameter).FbDbType = FbDbType.Guid;
+		if (parameter is FbParameter fbParameter)
+			fbParameter.FbDbType = FbDbType.Guid;
+		base.ConfigureParameter(parameter);
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)

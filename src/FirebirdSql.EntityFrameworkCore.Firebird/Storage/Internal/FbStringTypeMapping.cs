@@ -40,7 +40,9 @@ public class FbStringTypeMapping : StringTypeMapping
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		((FbParameter)parameter).FbDbType = _fbDbType;
+		if (parameter is FbParameter fbParameter)
+			fbParameter.FbDbType = _fbDbType;
+		base.ConfigureParameter(parameter);
 	}
 
 	protected override string GenerateNonNullSqlLiteral(object value)
