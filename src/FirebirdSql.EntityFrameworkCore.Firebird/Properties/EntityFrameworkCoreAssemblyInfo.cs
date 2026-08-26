@@ -15,6 +15,8 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net), Jean Ressouche, Rafael Almeida (ralms@ralms.net)
 
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore.Design;
 
 [assembly: DesignTimeProviderServices("FirebirdSql.EntityFrameworkCore.Firebird.Design.Internal.FbDesignTimeServices")]
+[assembly: InternalsVisibleTo("FirebirdSql.EntityFrameworkCore.Firebird.Tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001002f636382c6d70ed5596f3db517cf3bf37950ee9ee86340d32d6f98143f0a4fdf0e934d361de0a6ce63c61e0a0dddc5f66d8ec752306b94931241061817f3c203e1105da8958ca9a889af83083bbb53dfdfee2d028d554bef2ce8a577816202a7bb38885e2dc74695d2a0fecfef259a34860a8faf54ce49a0cd5b5fdfa90f4bb7")]

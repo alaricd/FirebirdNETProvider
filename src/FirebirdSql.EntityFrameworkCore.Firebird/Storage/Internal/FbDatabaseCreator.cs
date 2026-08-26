@@ -41,7 +41,10 @@ public class FbDatabaseCreator : RelationalDatabaseCreator
 
 	public override void Create()
 	{
-		FbConnection.CreateDatabase(_connection.ConnectionString, pageSize: 16384);
+		if (_connection.DbConnection is FbConnection)
+		{
+			FbConnection.CreateDatabase(_connection.ConnectionString, pageSize: 16384);
+		}
 
 		var designTimeModel = Dependencies.CurrentContext.Context.GetService<IDesignTimeModel>().Model;
 
@@ -61,7 +64,10 @@ public class FbDatabaseCreator : RelationalDatabaseCreator
 	}
 	public override async Task CreateAsync(CancellationToken cancellationToken = default)
 	{
-		await FbConnection.CreateDatabaseAsync(_connection.ConnectionString, pageSize: 16384, cancellationToken: cancellationToken).ConfigureAwait(false);
+		if (_connection.DbConnection is FbConnection)
+		{
+			await FbConnection.CreateDatabaseAsync(_connection.ConnectionString, pageSize: 16384, cancellationToken: cancellationToken).ConfigureAwait(false);
+		}
 
 		var designTimeModel = Dependencies.CurrentContext.Context.GetService<IDesignTimeModel>().Model;
 
@@ -85,16 +91,17 @@ public class FbDatabaseCreator : RelationalDatabaseCreator
 		if (_connection.DbConnection is FbConnection connection)
 		{
 			FbConnection.ClearPool(connection);
+			FbConnection.DropDatabase(_connection.ConnectionString);
 		}
-		FbConnection.DropDatabase(_connection.ConnectionString);
 	}
 	public override Task DeleteAsync(CancellationToken cancellationToken = default)
 	{
 		if (_connection.DbConnection is FbConnection connection)
 		{
 			FbConnection.ClearPool(connection);
+			return FbConnection.DropDatabaseAsync(_connection.ConnectionString, cancellationToken);
 		}
-		return FbConnection.DropDatabaseAsync(_connection.ConnectionString, cancellationToken);
+		return Task.CompletedTask;
 	}
 
 	public override bool Exists()
