@@ -15,6 +15,7 @@
 
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
+using System;
 using System.Data.Common;
 using FirebirdSql.Data.FirebirdClient;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -23,10 +24,22 @@ namespace FirebirdSql.EntityFrameworkCore.Firebird.Storage.Internal;
 
 public class FbRelationalConnection : RelationalConnection, IFbRelationalConnection
 {
-	public FbRelationalConnection(RelationalConnectionDependencies dependencies)
+	private readonly DbProviderFactory _providerFactory;
+
+	public FbRelationalConnection(RelationalConnectionDependencies dependencies, DbProviderFactory providerFactory)
 		: base(dependencies)
-	{ }
+	{
+		_providerFactory = providerFactory ?? throw new ArgumentNullException(nameof(providerFactory));
+	}
 
 	protected override DbConnection CreateDbConnection()
-		=> new FbConnection(ConnectionString);
+		=> CreateConnection();
+
+	private DbConnection CreateConnection()
+	{
+		var connection = _providerFactory.CreateConnection()
+			?? throw new InvalidOperationException("The provider factory returned no connection.");
+		connection.ConnectionString = ConnectionString;
+		return connection;
+	}
 }

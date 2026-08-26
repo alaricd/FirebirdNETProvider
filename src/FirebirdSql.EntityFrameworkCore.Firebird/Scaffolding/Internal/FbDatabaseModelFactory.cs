@@ -32,14 +32,22 @@ namespace FirebirdSql.EntityFrameworkCore.Firebird.Scaffolding.Internal;
 
 public class FbDatabaseModelFactory : DatabaseModelFactory
 {
+	private readonly DbProviderFactory _providerFactory;
+
+	public FbDatabaseModelFactory(DbProviderFactory providerFactory)
+	{
+		_providerFactory = providerFactory ?? throw new ArgumentNullException(nameof(providerFactory));
+	}
+
 	public int MajorVersionNumber { get; private set; }
 
 	public override DatabaseModel Create(string connectionString, DatabaseModelFactoryOptions options)
 	{
-		using (var connection = new FbConnection(connectionString))
+		using (var connection = _providerFactory.CreateConnection() ?? throw new InvalidOperationException("The provider factory returned no connection."))
 		{
+			connection.ConnectionString = connectionString;
 			return Create(connection, options);
-		};
+		}
 	}
 
 	public override DatabaseModel Create(DbConnection connection, DatabaseModelFactoryOptions options)

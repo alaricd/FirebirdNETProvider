@@ -16,6 +16,7 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System;
+using System.Data.Common;
 using FirebirdSql.EntityFrameworkCore.Firebird;
 using FirebirdSql.EntityFrameworkCore.Firebird.Diagnostics.Internal;
 using FirebirdSql.EntityFrameworkCore.Firebird.Infrastructure;
@@ -39,6 +40,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using FirebirdSql.Data.FirebirdClient;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.EntityFrameworkCore;
@@ -58,6 +60,7 @@ public static class FbServiceCollectionExtensions
 
 	public static IServiceCollection AddEntityFrameworkFirebird(this IServiceCollection serviceCollection)
 	{
+		serviceCollection.AddSingleton<DbProviderFactory>(FirebirdClientFactory.Instance);
 		var builder = new EntityFrameworkRelationalServicesBuilder(serviceCollection)
 			.TryAdd<LoggingDefinitions, FbLoggingDefinitions>()
 			.TryAdd<IDatabaseProvider, DatabaseProvider<FbOptionsExtension>>()

@@ -16,6 +16,7 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using FirebirdSql.Data.FirebirdClient;
@@ -323,6 +324,6 @@ public class ScaffoldingTests : EntityFrameworkCoreTestsBase
 
 	static IDatabaseModelFactory GetModelFactory()
 	{
-		return new FbDatabaseModelFactory();
+		return new FbDatabaseModelFactory(FirebirdClientFactory.Instance);
 	}
 }
