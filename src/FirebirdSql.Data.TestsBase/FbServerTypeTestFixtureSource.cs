@@ -36,6 +36,11 @@ class FbServerTypeTestFixtureSource
 
 	public static IEnumerable Embedded()
 	{
+		if (Environment.GetEnvironmentVariable("FIREBIRD_DOCKER_TESTS") == "1")
+		{
+			yield break;
+		}
+
 		yield return CreateTestFixtureData(FbServerType.Embedded, false, FbWireCrypt.Disabled);
 	}
 

@@ -340,6 +340,11 @@ public class FbConnectionTests : FbTestsBase
 	[Test]
 	public async Task UseTrustedAuth()
 	{
+		if (!OperatingSystem.IsWindows())
+		{
+			Assert.Ignore("Trusted authentication requires Windows SSPI.");
+		}
+
 		if (!EnsureWireCrypt(FbWireCrypt.Disabled))
 			return;
 		if (!EnsureServerType(FbServerType.Default))
@@ -357,6 +362,11 @@ public class FbConnectionTests : FbTestsBase
 	[Test]
 	public async Task CreateDropDatabaseUsingTrustedAuth()
 	{
+		if (!OperatingSystem.IsWindows())
+		{
+			Assert.Ignore("Trusted authentication requires Windows SSPI.");
+		}
+
 		if (!EnsureWireCrypt(FbWireCrypt.Disabled))
 			return;
 		if (!EnsureServerType(FbServerType.Default))
