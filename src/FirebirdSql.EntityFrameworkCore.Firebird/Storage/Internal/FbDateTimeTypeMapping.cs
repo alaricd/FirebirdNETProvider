@@ -40,8 +40,7 @@ public class FbDateTimeTypeMapping : DateTimeTypeMapping
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		if (parameter is FbParameter fbParameter)
-			fbParameter.FbDbType = _fbDbType;
+		parameter.DbType = _fbDbType == FbDbType.Date ? System.Data.DbType.Date : _fbDbType == FbDbType.Time ? System.Data.DbType.Time : System.Data.DbType.DateTime;
 		base.ConfigureParameter(parameter);
 	}
 

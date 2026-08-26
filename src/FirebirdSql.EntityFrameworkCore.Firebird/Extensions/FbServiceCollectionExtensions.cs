@@ -42,6 +42,7 @@ using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using FirebirdSql.Data.FirebirdClient;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.EntityFrameworkCore;
 
@@ -60,7 +61,7 @@ public static class FbServiceCollectionExtensions
 
 	public static IServiceCollection AddEntityFrameworkFirebird(this IServiceCollection serviceCollection)
 	{
-		serviceCollection.AddSingleton<DbProviderFactory>(FirebirdClientFactory.Instance);
+		serviceCollection.TryAddSingleton<DbProviderFactory>(FirebirdClientFactory.Instance);
 		var builder = new EntityFrameworkRelationalServicesBuilder(serviceCollection)
 			.TryAdd<LoggingDefinitions, FbLoggingDefinitions>()
 			.TryAdd<IDatabaseProvider, DatabaseProvider<FbOptionsExtension>>()

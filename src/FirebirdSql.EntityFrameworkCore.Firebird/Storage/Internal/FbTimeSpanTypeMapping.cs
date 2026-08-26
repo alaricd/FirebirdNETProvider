@@ -40,8 +40,7 @@ public class FbTimeSpanTypeMapping : TimeSpanTypeMapping
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		if (parameter is FbParameter fbParameter)
-			fbParameter.FbDbType = _fbDbType;
+		parameter.DbType = System.Data.DbType.Time;
 		base.ConfigureParameter(parameter);
 	}
 

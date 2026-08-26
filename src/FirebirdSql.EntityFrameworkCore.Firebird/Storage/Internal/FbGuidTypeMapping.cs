@@ -33,8 +33,7 @@ public class FbGuidTypeMapping : GuidTypeMapping
 
 	protected override void ConfigureParameter(DbParameter parameter)
 	{
-		if (parameter is FbParameter fbParameter)
-			fbParameter.FbDbType = FbDbType.Guid;
+		parameter.DbType = System.Data.DbType.Guid;
 		base.ConfigureParameter(parameter);
 	}
 
